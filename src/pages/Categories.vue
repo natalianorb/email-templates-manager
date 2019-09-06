@@ -1,16 +1,24 @@
 <template>
-  <div class="categories">
-    <CategoryEdit
-      v-for="category in categories"
-      :key="category.id"
-      :is-editing="false"
-      :category="category"
-      @select="showCategory"
-      @submit="saveCategory"/>
-  </div>
+  <table class="categories">
+    <tr class="categories__head">
+      <td>Название</td>
+      <td>Родительская категория</td>
+      <td>Подкатегории</td>
+      <td colspan="2">Сообщения</td>
+    </tr>
+    <tr is="CategoryEdit"
+        v-for="category in categories"
+        :key="category.id"
+        :is-editing="false"
+        :category="category"
+        @select="showCategory"
+        @save="saveCategory"
+    />
+  </table>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import CategoryEdit from '@/components/CategoryEdit.vue';
 import Category from '@/classes/Category';
 
@@ -29,8 +37,11 @@ export default {
     this.getCategories();
   },
   methods: {
-    getCategories(params = { perPage: 10 }) {
-      Category.getSome(params)
+    ...mapActions([
+      'setCategory',
+    ]),
+    getCategories() {
+      Category.getSome()
         .then((res) => {
           this.categories = res.data.map(d => new Category(d));
         });
@@ -43,12 +54,22 @@ export default {
         });
     },
     showCategory(id) {
+      const cat = this.categories.find(c => c.id === id);
+      this.setCategory(cat);
       this.$router.push({ name: 'category', params: { id } });
     },
   },
 };
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.categories {
+  border-collapse: collapse;
+  &__head {
+    color: #2c3e50;
+    td {
+      padding: 4px;
+    }
+  }
+}
 </style>

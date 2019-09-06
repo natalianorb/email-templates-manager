@@ -1,7 +1,8 @@
 import axios from 'axios';
 import Base from '@/classes/Base';
+import { baseUrl } from '@/env';
 
-const baseUrl = 'https://simple-api.sandbox.movavi.com/api/v1/';
+const categoryFields = ['id', 'title', 'parent', 'children', 'messages'];
 
 class Category extends Base {
   constructor(props = {
@@ -27,27 +28,28 @@ class Category extends Base {
       .then(res => res.data && res.data.result);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  get(options) {
-    if (!options.id) {
+  get(options = {}) {
+    const { id } = this;
+
+    if (!id) {
       return Promise.reject(new Error('get Category requires id'));
     }
     return axios
-      .get(baseUrl, {
+      .post(baseUrl, {
         jsonrpc: '2.0',
         method: 'readCategory',
         id: 'test',
         params: {
-          conditions: ['id', '=', options.id],
+          conditions: ['id', '=', id],
           page: options.page,
           perPage: options.perPage,
-          fields: ['id', 'title', 'parent', 'children', 'messages'],
+          fields: categoryFields,
         },
       })
       .then(res => res.data && res.data.result);
   }
 
-  static getSome(options = {}) {
+  static getSome(options = { perPage: 10 }) {
     return axios
       .post(baseUrl, {
         jsonrpc: '2.0',
@@ -57,7 +59,7 @@ class Category extends Base {
           conditions: ['id', 'IS NOT NULL'],
           page: options.page,
           perPage: options.perPage,
-          fields: ['id', 'title', 'parent', 'children', 'messages'],
+          fields: categoryFields,
         },
       })
       .then(res => res.data && res.data.result);

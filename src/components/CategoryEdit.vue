@@ -1,8 +1,17 @@
 <template>
-  <form class="category">
-    <input v-model="title" :disabled="!isEditing" type="text" @click="onSelect">
-    <button v-if="isEditing" type="submit" @click="onSubmit">save</button>
-  </form>
+  <tr class="category-edit"  @click="onSelect">
+    <td>
+      <input class="category-edit__input" v-model="title" :disabled="!isEditing" type="text">
+    </td>
+    <td class="category-edit__parent">{{ category.parent }}</td>
+    <td class="category-edit__children">{{ category.children.size }}</td>
+    <td class="category-edit__messages">{{ category.messages.size }}</td>
+    <td>
+      <button class="category-edit__save" v-if="isEditing" type="button" @click.stop="onSave">
+        save
+      </button>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -46,11 +55,11 @@ export default {
         this.$emit('select', this.category.id);
       }
     },
-    onSubmit() {
+    onSave() {
       const {
         id, title, parent, children, messages,
       } = this;
-      this.$emit('submit', {
+      this.$emit('save', {
         id, title, parent, children, messages,
       });
     },
@@ -59,7 +68,16 @@ export default {
 </script>
 
 <style scoped lang="less">
-.category {
-  padding: 5px;
+.category-edit {
+  height: 36px;
+  &:hover {
+    background-color: rgba(137, 149, 175, 0.1);
+  }
+  td {
+    padding: 4px;
+  }
+  &__input {
+    background-color:  #fff;
+  }
 }
 </style>
