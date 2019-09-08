@@ -2,7 +2,7 @@ import axios from 'axios';
 import Base from '@/classes/Base';
 import { baseUrl } from '@/env';
 
-const categoryFields = ['id', 'title', 'parent', 'children', 'messages'];
+const fields = ['id', 'title', 'parent', 'children', 'messages'];
 
 class Category extends Base {
   constructor(props = {
@@ -28,11 +28,31 @@ class Category extends Base {
       .then(res => res.data && res.data.result);
   }
 
-  get(options = {}) {
-    const { id } = this;
+  // eslint-disable-next-line class-methods-use-this
+  update(data) {
+    const { id } = data;
 
     if (!id) {
-      return Promise.reject(new Error('get Category requires id'));
+      return Promise.reject(new Error('save requires id'));
+    }
+    return axios
+      .post(baseUrl, {
+        jsonrpc: '2.0',
+        method: 'updateCategory',
+        id: 'test',
+        params: {
+          conditions: ['id', '=', data.id],
+          data,
+        },
+      })
+      .then(res => res.data && res.data.result);
+  }
+
+  static getById(options = {}) {
+    const { id, page, perPage } = options;
+
+    if (!id) {
+      return Promise.reject(new Error('getById requires id'));
     }
     return axios
       .post(baseUrl, {
@@ -41,15 +61,38 @@ class Category extends Base {
         id: 'test',
         params: {
           conditions: ['id', '=', id],
-          page: options.page,
-          perPage: options.perPage,
-          fields: categoryFields,
+          page,
+          perPage,
+          fields,
         },
       })
-      .then(res => res.data && res.data.result);
+      .then(res => res.data && res.data.result && res.data.result.data && res.data.result.data[0]);
+  }
+
+  static getByTitle(options = {}) {
+    const { title, page, perPage } = options;
+
+    if (!title) {
+      return Promise.reject(new Error('getByTitle requires title'));
+    }
+    return axios
+      .post(baseUrl, {
+        jsonrpc: '2.0',
+        method: 'readCategory',
+        id: 'test',
+        params: {
+          conditions: ['title', '<=', title],
+          page,
+          perPage,
+          fields,
+        },
+      })
+      .then(res => res.data && res.data.result && res.data.result.data && res.data.result.data);
   }
 
   static getSome(options = { perPage: 10 }) {
+    const { page, perPage } = options;
+
     return axios
       .post(baseUrl, {
         jsonrpc: '2.0',
@@ -57,9 +100,9 @@ class Category extends Base {
         id: 'test',
         params: {
           conditions: ['id', 'IS NOT NULL'],
-          page: options.page,
-          perPage: options.perPage,
-          fields: categoryFields,
+          page,
+          perPage,
+          fields,
         },
       })
       .then(res => res.data && res.data.result);
