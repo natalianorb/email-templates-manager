@@ -81,7 +81,7 @@ class Category extends Base {
         method: 'readCategory',
         id: 'test',
         params: {
-          conditions: ['title', '<=', title],
+          conditions: ['title', 'LIKE', `${title}%`],
           page,
           perPage,
           fields,
