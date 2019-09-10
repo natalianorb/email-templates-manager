@@ -135,6 +135,7 @@ export default {
         this.$emit('error', 'Слишком длинный текст');
         return false;
       }
+      this.$emit('error', '');
       return true;
     },
   },
