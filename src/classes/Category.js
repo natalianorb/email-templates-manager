@@ -28,6 +28,19 @@ class Category extends Base {
       .then(res => res.data && res.data.result);
   }
 
+  delete() {
+    return axios
+      .post(baseUrl, {
+        jsonrpc: '2.0',
+        method: 'deleteCategory',
+        id: 'test',
+        params: {
+          conditions: ['id', '=', this.id],
+        },
+      })
+      .then(res => res.data && res.data.result);
+  }
+
   // eslint-disable-next-line class-methods-use-this
   update(data) {
     const { id } = data;

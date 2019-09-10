@@ -32,8 +32,15 @@
         <button class="category-edit__save" :disabled="!!error" type="button" @click.stop="onSave">
           Сохранить
         </button>
-        <button class="category-edit__save"  type="button" @click.stop="onCancel">
-          Отмена
+        <button
+          v-if="category.id"
+          class="category-edit__save"
+          type="button"
+          @click.stop="onDelete"
+        >
+          Удалить
+        </button>
+        <button class="category-edit__cancel"  type="button" @click.stop="onCancel">
         </button>
       </template>
       <button
@@ -124,6 +131,9 @@ export default {
       this.error = '';
       this.init();
     },
+    onDelete() {
+      this.$emit('delete', this.category.id);
+    },
     onEdit() {
       this.$emit('edit', this.category.id);
     },
@@ -189,10 +199,15 @@ export default {
     background-color:  #fff;
   }
   &__buttons {
-    width: 165px;
+    width: 200px;
     button {
       margin: 0 4px;
     }
+  }
+  &__cancel {
+    width: 20px;
+    height: 20px;
+    background: url('../assets/images/close.svg') center/14px no-repeat;
   }
   .error {
     opacity: 0;
