@@ -81,7 +81,7 @@ export default {
       isScrolling: false,
       visible: false,
       rules: {
-        maxLength: value => value && (value.length <= this.maxLength),
+        maxLength: value => !value || (value.length <= this.maxLength),
       },
       selected: null,
     };
