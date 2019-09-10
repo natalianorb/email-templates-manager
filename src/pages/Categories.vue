@@ -19,6 +19,7 @@
           v-for="category in categories"
           :key="category.id"
           :is-editing="category.id === editingCategoryId"
+          :is-change-disabled="!!editingCategoryId && category.id !== editingCategoryId"
           :category="category"
           @cancel="editingCategoryId = 0"
           @edit="editingCategoryId = $event"
@@ -91,14 +92,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  @import "../assets/styles/colors";
 .categories {
   &__table {
     border-collapse: collapse;
   }
   &__head {
-    color: #2c3e50;
+    color: @text-color;
     td {
-      padding: 4px;
+      padding: 10px 4px 4px;
     }
   }
 }
