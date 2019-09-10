@@ -36,9 +36,11 @@ export default {
     padding: 4px;
     background-color: #fff;
     color: @text-color;
+    cursor: pointer;
     &[disabled] {
       background-color: rgba(7, 16, 28, 0.1);
       color: rgba(7, 16, 28, 0.6);
+      cursor: default;
     }
   }
 }
