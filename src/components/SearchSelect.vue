@@ -119,9 +119,8 @@ export default {
     onInput(e) {
       const { value } = e.target;
       this.visible = true;
-      if (this.validate(value)) {
-        this.$emit('input', value);
-      }
+      this.validate(value);
+      this.$emit('input', value);
     },
     select(option) {
       this.closeDropdown();
