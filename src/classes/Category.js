@@ -3,6 +3,7 @@ import Base from '@/classes/Base';
 import { baseUrl } from '@/env';
 
 const fields = ['id', 'title', 'parent', 'children', 'messages'];
+const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
 
 class Category extends Base {
   constructor(props = {
@@ -82,9 +83,7 @@ class Category extends Base {
       .then(res => res.data && res.data.result && res.data.result.data && res.data.result.data[0]);
   }
 
-  static getByTitle(options = {}) {
-    const { title, page, perPage } = options;
-
+  static getByTitle({ perPage = 10, title, page }) {
     if (!title) {
       return Promise.reject(new Error('getByTitle requires title'));
     }
@@ -94,7 +93,15 @@ class Category extends Base {
         method: 'readCategory',
         id: 'test',
         params: {
-          conditions: ['title', 'LIKE', `${title}%`],
+          conditions: {
+            operator: 'or',
+            operand_1: {
+              operator: 'or',
+              operand_1: ['title', 'LIKE', `${title.toLowerCase()}%`],
+              operand_2: ['title', 'LIKE', `${title.toUpperCase()}%`],
+            },
+            operand_2: ['title', 'LIKE', `${capitalize(title)}%`],
+          },
           page,
           perPage,
           fields,
@@ -103,14 +110,14 @@ class Category extends Base {
       .then(res => res.data && res.data.result && res.data.result.data && res.data.result.data);
   }
 
-  static getSome({ perPage = 10, page }) {
+  static get({ perPage = 10, page, conditions = ['id', 'IS NOT NULL'] }) {
     return axios
       .post(baseUrl, {
         jsonrpc: '2.0',
         method: 'readCategory',
         id: 'test',
         params: {
-          conditions: ['id', 'IS NOT NULL'],
+          conditions,
           page,
           perPage,
           fields,
