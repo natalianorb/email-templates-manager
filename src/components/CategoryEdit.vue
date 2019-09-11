@@ -22,7 +22,7 @@
           </div>
         </template>
       </SearchSelect>
-      <div v-else-if="category.parent">{{ category.parent.title }}</div>
+      <input v-else-if="category.parent" :value="category.parent.title" disabled/>
       <div :class="[ 'error', { visible: !!error } ]" >{{ error }}</div>
     </td>
     <td class="category-edit__children">{{ category.children.size }}</td>
@@ -93,6 +93,17 @@ export default {
       messages: [],
     };
   },
+  watch: {
+    category: {
+      deep: true,
+      handler(newVal, oldVal) {
+        if (newVal.parent && newVal.parent.title && (!oldVal.parent || !oldVal.parent.title)) {
+          this.parent = newVal.parent;
+          this.parentTitle = newVal.parent.title;
+        }
+      },
+    },
+  },
   created() {
     this.init();
 
@@ -110,7 +121,7 @@ export default {
 
       if (parent) {
         this.parent = parent;
-        this.parentTitle = this.parent.title;
+        this.parentTitle = parent.title;
       } else {
         this.parent = null;
         this.parentTitle = '';
@@ -121,7 +132,7 @@ export default {
         return;
       }
       if (e.target && e.target.value && !this.parent) {
-        this.error = 'Проверьте текст на корректность';
+        this.error = 'Проверьте корректность ввода';
       }
     },
     onCancel() {
@@ -136,9 +147,10 @@ export default {
       this.$emit('edit', this.category.id);
     },
     onInputParent(val) {
-      this.parentTitle = val;
+      this.parentTitle = val.trim();
+      this.parent = null;
       if (!this.error) {
-        this.debouncedsearchParent(val);
+        this.debouncedsearchParent(this.parentTitle);
       }
     },
     onSelect() {
@@ -160,15 +172,14 @@ export default {
         title,
         children,
         messages,
-        parent: parent ? { id: parent.id } : null,
+        parent,
       });
     },
     searchParent(title) {
-      const trimmed = title.trim();
-      if (!trimmed) {
+      if (!title) {
         return;
       }
-      Category.getByTitle({ title: trimmed }).then((res) => {
+      Category.getByTitle({ title }).then((res) => {
         this.parents = res;
       });
     },
@@ -178,7 +189,7 @@ export default {
 
 <style scoped lang="less">
 .category-edit {
-  height: 50px;
+  height: 55px;
   &:hover {
     background-color:  rgba(7, 16, 28, 0.1);
   }
