@@ -85,7 +85,7 @@ export default {
   },
   data() {
     return {
-      createdCategory: new Category(),
+      createdCategory: {},
       categories: [],
       deletingCategoryId: 0,
       isCreating: false,
@@ -139,6 +139,7 @@ export default {
     ]),
     createCategory() {
       this.isCreating = true;
+      this.createdCategory = new Category();
     },
     doubleCheck() {
       if (this.showNextConfirm && !this.isSecondConfirmVisible) {
@@ -178,8 +179,9 @@ export default {
         })
         .then(({ data }) => {
           hasParents.forEach((c) => {
-            // eslint-disable-next-line no-param-reassign
-            c.parent = new Category(data.find(cat => cat.id === c.parent.id));
+            const parent = data.find(cat => cat.id === c.parent.id);
+            const index = this.categories.findIndex(cat => cat.id === c.id);
+            this.$set(this.categories, index, new Category(Object.assign({}, c, { parent })));
           });
         });
     },
@@ -187,22 +189,30 @@ export default {
       this.getCategories({ page });
     },
     saveCategory(category, data) {
+      const savingData = Object.assign({}, data);
+
+      savingData.parent = data.parent ? { id: data.parent.id } : null;
       if (category.id) {
-        category.update(data)
+        category.update(savingData)
           .then(() => {
             this.editingCategoryId = 0;
+            const index = this.categories.findIndex(cat => cat.id === category.id);
+            this.$set(this.categories, index, new Category(data));
           });
         return;
       }
-      category.create(data)
+
+      this.createdCategory = new Category(data);
+      category.create(savingData)
         .then((res) => {
           const primaryKey = res['Primary key'];
-          this.category.id = primaryKey && primaryKey.id;
+          this.createdCategory.id = primaryKey && primaryKey.id;
           this.isCreating = false;
+          this.categories.unshift(this.createdCategory);
         });
     },
     showCategory(id) {
-      if (this.editingCategoryId) {
+      if (this.isCreating || this.editingCategoryId) {
         return;
       }
       const cat = this.categories.find(c => c.id === id);
@@ -231,6 +241,9 @@ export default {
     td {
       padding: 10px 4px;
     }
+  }
+  .filters {
+    margin-top: 30px;
   }
 }
 </style>

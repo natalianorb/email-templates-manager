@@ -18,6 +18,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: @text-color;
+  font-size: 14px;
   * {
     box-sizing: border-box;
   }
@@ -26,6 +27,7 @@ export default {
     outline: none;
     padding: 4px;
     color: @text-color;
+    font-size: 14px;
     &::placeholder {
       color: rgba(7, 16, 28, 0.6);
     }
@@ -60,6 +62,7 @@ export default {
   .pagination {
     display: flex;
     justify-content: flex-end;
+    padding: 20px;
     &__page {
       width: 20px;
       margin: 0 5px;
