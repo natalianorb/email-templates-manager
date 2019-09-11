@@ -4,6 +4,7 @@
       :value="searchingValue"
       :placeholder="placeholder"
       class="search-select__input"
+      @focus="showDropdown"
       @input="onInput"
       @blur="onBlur"
     />
@@ -138,6 +139,11 @@ export default {
       this.$emit('error', '');
       return true;
     },
+    showDropdown() {
+      if (this.searchingValue && this.filteredOptions.length) {
+        this.visible = true;
+      }
+    },
   },
 };
 </script>
@@ -146,6 +152,9 @@ export default {
   .search-select {
     position: relative;
 
+    &__input {
+      width: 100%;
+    }
     &__dropdown {
       position: absolute;
       top: 100%;
