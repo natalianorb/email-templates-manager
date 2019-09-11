@@ -22,7 +22,7 @@
           </div>
         </template>
       </SearchSelect>
-      <div v-else-if="parent">{{ parent.title }}</div>
+      <div v-else-if="category.parent">{{ category.parent.title }}</div>
       <div :class="[ 'error', { visible: !!error } ]" >{{ error }}</div>
     </td>
     <td class="category-edit__children">{{ category.children.size }}</td>
@@ -109,10 +109,8 @@ export default {
       this.messages = messages;
 
       if (parent) {
-        Category.getById({ id: parent.id }).then((res) => {
-          this.parent = new Category(res);
-          this.parentTitle = this.parent.title;
-        });
+        this.parent = parent;
+        this.parentTitle = this.parent.title;
       } else {
         this.parent = null;
         this.parentTitle = '';
@@ -191,12 +189,15 @@ export default {
     padding: 10px 4px 4px;
     vertical-align: baseline;
   }
+  &__input {
+    background-color:  #fff;
+  }
   &__parent {
     width: 230px;
     text-align: left;
   }
-  &__input {
-    background-color:  #fff;
+  &__children {
+    width: 230px;
   }
   &__buttons {
     width: 200px;

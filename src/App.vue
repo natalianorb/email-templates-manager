@@ -22,12 +22,16 @@ export default {
     box-sizing: border-box;
   }
   input {
-    border: none;
+    border: 1px solid rgba(7, 16, 28, 0.3);
     outline: none;
     padding: 4px;
     color: @text-color;
     &::placeholder {
       color: rgba(7, 16, 28, 0.6);
+    }
+    &[disabled] {
+      border-color: transparent;
+      background-color: transparent;
     }
   }
   button {

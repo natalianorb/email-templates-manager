@@ -1,12 +1,19 @@
 <template>
   <div class="categories">
     <button type="button" @click="createCategory">Создать категорию</button>
+    <Filters
+      :title.sync="title"
+      :parent-title.sync="parentTitle"
+      :has-counter="true"
+      :messages-count.sync="messagesCount"
+    />
     <table class="categories__table">
       <tr class="categories__head">
         <td>Название</td>
         <td>Родительская категория</td>
         <td>Подкатегории</td>
-        <td colspan="2">Сообщения</td>
+        <td>Сообщения</td>
+        <td></td>
       </tr>
       <tr v-if="isCreating"
           is="CategoryEdit"
@@ -16,7 +23,7 @@
           @save="debouncedSave(createdCategory, $event)"
       />
       <tr is="CategoryEdit"
-          v-for="category in categories"
+          v-for="category in filteredCategories"
           :key="category.id"
           :is-editing="category.id === editingCategoryId"
           :is-change-disabled="!!editingCategoryId && category.id !== editingCategoryId"
@@ -66,11 +73,13 @@ import { debounce } from 'lodash';
 import Paginate from 'vuejs-paginate';
 import CategoryEdit from '@/components/CategoryEdit.vue';
 import Category from '@/classes/Category';
+import Filters from '@/components/Filters.vue';
 
 export default {
   name: 'Categories',
   components: {
     CategoryEdit,
+    Filters,
     Paginate,
     SimpleModal,
   },
@@ -85,6 +94,9 @@ export default {
       isSecondConfirmVisible: false,
       page: 0,
       totalPages: 0,
+      title: '',
+      parentTitle: '',
+      messagesCount: null,
     };
   },
   computed: {
@@ -94,6 +106,26 @@ export default {
     showNextConfirm() {
       return this.deletingCategory
         && (this.deletingCategory.children.size || this.deletingCategory.messages.size);
+    },
+    filteredCategories() {
+      const { title, parentTitle, messagesCount } = this;
+      const normalizedTitle = title.toLowerCase();
+      const normalizedParent = parentTitle.toLowerCase();
+
+      return this.categories.filter((c) => {
+        let res = true;
+
+        if (normalizedTitle) {
+          res = c.title.toLowerCase().includes(normalizedTitle);
+        }
+        if (normalizedParent) {
+          res = res && c.parent && c.parent.title.toLowerCase().includes(normalizedParent);
+        }
+        if (typeof messagesCount === 'number') {
+          res = res && (c.messages.size === messagesCount);
+        }
+        return res;
+      });
     },
   },
   created() {
@@ -130,11 +162,25 @@ export default {
       }
     },
     getCategories(params = {}) {
-      Category.getSome(params)
+      let hasParents;
+
+      return Category.get(params)
         .then(({ data, totalPages, page }) => {
           this.categories = data.map(d => new Category(d));
           this.totalPages = totalPages;
           this.page = page;
+        })
+        .then(() => {
+          hasParents = this.categories.filter(c => !!c.parent);
+          return Category.get({
+            conditions: ['id', 'IN', [...new Set(hasParents.map(c => c.parent.id))]],
+          });
+        })
+        .then(({ data }) => {
+          hasParents.forEach((c) => {
+            // eslint-disable-next-line no-param-reassign
+            c.parent = new Category(data.find(cat => cat.id === c.parent.id));
+          });
         });
     },
     getPage(page) {
@@ -174,13 +220,16 @@ export default {
   min-width: 900px;
   max-width: 1100px;
   margin: 0 auto;
+  padding: 40px 0;
   &__table {
+    width: 100%;
+    margin-top: 20px;
     border-collapse: collapse;
   }
   &__head {
     color: @text-color;
     td {
-      padding: 10px 4px 4px;
+      padding: 10px 4px;
     }
   }
 }
