@@ -103,9 +103,7 @@ class Category extends Base {
       .then(res => res.data && res.data.result && res.data.result.data && res.data.result.data);
   }
 
-  static getSome(options = { perPage: 10 }) {
-    const { page, perPage } = options;
-
+  static getSome({ perPage = 10, page }) {
     return axios
       .post(baseUrl, {
         jsonrpc: '2.0',

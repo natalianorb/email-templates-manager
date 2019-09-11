@@ -28,6 +28,16 @@
           @select="showCategory"
       />
     </table>
+    <paginate
+      v-model="page"
+      :page-count="totalPages"
+      :click-handler="getPage"
+      prev-text="Пред."
+      next-text="След."
+      container-class="pagination"
+      page-class="pagination__page"
+      >
+    </paginate>
     <simple-modal
       v-model="isModalVisible"
       size="small"
@@ -53,6 +63,7 @@
 import { mapActions } from 'vuex';
 import SimpleModal from 'simple-modal-vue';
 import { debounce } from 'lodash';
+import Paginate from 'vuejs-paginate';
 import CategoryEdit from '@/components/CategoryEdit.vue';
 import Category from '@/classes/Category';
 
@@ -60,6 +71,7 @@ export default {
   name: 'Categories',
   components: {
     CategoryEdit,
+    Paginate,
     SimpleModal,
   },
   data() {
@@ -71,6 +83,8 @@ export default {
       isModalVisible: false,
       editingCategoryId: 0,
       isSecondConfirmVisible: false,
+      page: 0,
+      totalPages: 0,
     };
   },
   computed: {
@@ -115,11 +129,16 @@ export default {
           });
       }
     },
-    getCategories() {
-      Category.getSome({ perPage: 15 })
-        .then((res) => {
-          this.categories = res.data.map(d => new Category(d));
+    getCategories(params = {}) {
+      Category.getSome(params)
+        .then(({ data, totalPages, page }) => {
+          this.categories = data.map(d => new Category(d));
+          this.totalPages = totalPages;
+          this.page = page;
         });
+    },
+    getPage(page) {
+      this.getCategories({ page });
     },
     saveCategory(category, data) {
       if (category.id) {
@@ -151,6 +170,10 @@ export default {
 <style lang="less" scoped>
   @import "../assets/styles/colors";
 .categories {
+  width: 90%;
+  min-width: 900px;
+  max-width: 1100px;
+  margin: 0 auto;
   &__table {
     border-collapse: collapse;
   }
@@ -159,11 +182,6 @@ export default {
     td {
       padding: 10px 4px 4px;
     }
-  }
-}
-.modal {
-  &__buttons {
-    margin-top: 20px;
   }
 }
 </style>
