@@ -42,7 +42,7 @@ export default {
 * {
  box-sizing: border-box;
 }
-input {
+input, textarea {
  border: 1px solid rgba(7, 16, 28, 0.3);
  outline: none;
  padding: 4px;
