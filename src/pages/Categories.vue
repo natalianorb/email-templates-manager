@@ -1,5 +1,6 @@
 <template>
   <div class="categories">
+    <router-link :to="{ name: 'messages' }">К сообщениям</router-link>
     <button type="button" @click="createCategory">Создать категорию</button>
     <Filters
       :title.sync="title"
@@ -261,7 +262,7 @@ export default {
       }
       const cat = this.categories.find(c => c.id === id);
       this.setCategory(cat);
-      this.$router.push({ name: 'category', params: { id } });
+      this.$router.push({ name: 'category', params: { id: `${id}` } });
     },
   },
 };
