@@ -9,10 +9,34 @@
     />
     <table class="categories__table">
       <tr class="categories__head">
-        <td>Название</td>
-        <td>Родительская категория</td>
-        <td>Подкатегории</td>
-        <td>Сообщения</td>
+        <td>
+          <button
+            :class="['categories__sort', { sorted: sortBy === 'title', ascending }]"
+            type="button" @click="sortBy = 'title'; ascending = !ascending">
+            Название
+          </button>
+        </td>
+        <td>
+          <button
+            :class="['categories__sort', { sorted: sortBy === 'parentTitle', ascending }]"
+            type="button" @click="sortBy = 'parentTitle'; ascending = !ascending">
+            Родительская категория
+          </button>
+        </td>
+        <td>
+          <button
+            :class="['categories__sort', { sorted: sortBy === 'children', ascending }]"
+            type="button" @click="sortBy = 'children'; ascending = !ascending">
+            Подкатегории
+          </button>
+        </td>
+        <td>
+          <button
+            :class="['categories__sort', { sorted: sortBy === 'messages', ascending }]"
+            type="button" @click="sortBy = 'messages'; ascending = !ascending">
+            Сообщения
+          </button>
+        </td>
         <td></td>
       </tr>
       <tr v-if="isCreating"
@@ -74,6 +98,7 @@ import Paginate from 'vuejs-paginate';
 import CategoryEdit from '@/components/CategoryEdit.vue';
 import Category from '@/classes/Category';
 import Filters from '@/components/Filters.vue';
+import { compareBy } from '@/utils';
 
 export default {
   name: 'Categories',
@@ -97,6 +122,8 @@ export default {
       title: '',
       parentTitle: '',
       messagesCount: null,
+      sortBy: 'title',
+      ascending: true,
     };
   },
   computed: {
@@ -111,6 +138,23 @@ export default {
       const { title, parentTitle, messagesCount } = this;
       const normalizedTitle = title.toLowerCase();
       const normalizedParent = parentTitle.toLowerCase();
+      let path;
+
+      // eslint-disable-next-line default-case
+      switch (this.sortBy) {
+        case 'title':
+          path = 'title';
+          break;
+        case 'parentTitle':
+          path = 'parent.title';
+          break;
+        case 'children':
+          path = 'children.size';
+          break;
+        case 'messages':
+          path = 'messages.size';
+          break;
+      }
 
       return this.categories.filter((c) => {
         let res = true;
@@ -125,7 +169,7 @@ export default {
           res = res && (c.messages.size === messagesCount);
         }
         return res;
-      });
+      }).sort((a, b) => (this.ascending ? compareBy(a, b, path) : compareBy(b, a, path)));
     },
   },
   created() {
@@ -240,6 +284,22 @@ export default {
     color: @text-color;
     td {
       padding: 10px 4px;
+    }
+  }
+  &__sort {
+    border: none;
+    &.sorted:after {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-left: 5px;
+      content: '';
+      background: url('../assets/images/angle.svg') right center/10px no-repeat;
+    }
+    &.ascending {
+      &:after {
+        transform: rotate(180deg);
+      }
     }
   }
   .filters {

@@ -19,41 +19,7 @@ export default {
   text-align: center;
   color: @text-color;
   font-size: 14px;
-  * {
-    box-sizing: border-box;
-  }
-  input {
-    border: 1px solid rgba(7, 16, 28, 0.3);
-    outline: none;
-    padding: 4px;
-    color: @text-color;
-    font-size: 14px;
-    &::placeholder {
-      color: rgba(7, 16, 28, 0.6);
-    }
-    &[disabled] {
-      border-color: transparent;
-      background-color: transparent;
-    }
-  }
-  button {
-    border: 1px solid rgba(7, 16, 28, 0.3);
-    outline: none;
-    padding: 4px;
-    background-color: #fff;
-    color: @text-color;
-    cursor: pointer;
-    &[disabled] {
-      background-color: rgba(7, 16, 28, 0.1);
-      color: rgba(7, 16, 28, 0.6);
-      cursor: default;
-    }
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+
   .modal {
     &__buttons {
       margin-top: 20px;
@@ -71,11 +37,46 @@ export default {
         border: 1px solid rgba(7, 16, 28, 0.3);
       }
     }
-    a {
-      color: rgba(7, 16, 28, 0.6);
-      font-size: 14px;
-      outline: none;
-    }
   }
+}
+* {
+ box-sizing: border-box;
+}
+input {
+ border: 1px solid rgba(7, 16, 28, 0.3);
+ outline: none;
+ padding: 4px;
+ color: @text-color;
+ font-size: 14px;
+ &::placeholder {
+   color: rgba(7, 16, 28, 0.6);
+ }
+ &[disabled] {
+   border-color: transparent;
+   background-color: transparent;
+ }
+}
+button {
+ border: 1px solid rgba(7, 16, 28, 0.3);
+ outline: none;
+ padding: 4px;
+ background-color: #fff;
+ color: @text-color;
+ cursor: pointer;
+ &[disabled] {
+   background-color: rgba(7, 16, 28, 0.1);
+   color: rgba(7, 16, 28, 0.6);
+   cursor: default;
+ }
+}
+ul {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+}
+a {
+ color: rgba(7, 16, 28, 0.6);
+ font-size: 14px;
+ outline: none;
 }
 </style>
