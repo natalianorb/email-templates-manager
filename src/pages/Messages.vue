@@ -1,12 +1,15 @@
 <template>
   <div class="messages">
     <h1 v-if="id">Категория {{ category.title }}</h1>
-    <router-link :to="{ name: 'categories' }">К категориям</router-link>
-    <button type="button" @click="createMessage">Создать сообщение</button>
+    <h1 v-else>Сообщения</h1>
+    <div class="header">
+      <router-link :to="{ name: 'categories' }">К категориям</router-link>
+      <button type="button" @click="createMessage">Создать сообщение</button>
+    </div>
     <Filters
       :title.sync="title"
       :parent-title.sync="parentTitle"
-      :has-counter="false"
+      :max-title-length="1024"
       :messages-count.sync="messagesCount"
     />
     <table class="messages__table">
@@ -51,7 +54,6 @@
           @delete="deletingMessageId = $event; isModalVisible = true"
           @edit="editingMessageId = $event"
           @save="debouncedSave(message, $event)"
-          @select="showMessage"
       />
     </table>
     <paginate
@@ -216,13 +218,14 @@ export default {
           this.page = page;
         });
     },
-    getMessages() {
-      Message.get({})
+    getMessages(page) {
+      Message.get({ page })
+      // eslint-disable-next-line no-shadow
         .then(({ data, totalPages, page }) => {
           this.messages = data.map(d => new Message(d));
           this.totalPages = totalPages;
           this.page = page;
-          const categoriesIds = data.map(m => m.category);
+          const categoriesIds = data.map(m => m.category && m.category.id);
 
           return Category.get({
             conditions: ['id', 'IN', [...new Set(categoriesIds)]],
@@ -236,7 +239,11 @@ export default {
         });
     },
     getPage(page) {
-      this.getCategoryMessages(page);
+      if (this.id) {
+        this.getCategoryMessages(page);
+      } else {
+        this.getMessages(page);
+      }
     },
     saveMessage(message, data) {
       const categoryId = data.category && data.category.id;
@@ -261,14 +268,6 @@ export default {
           this.isCreating = false;
           this.messages.unshift(this.createdMessage);
         });
-    },
-    showMessage(id) {
-      if (this.isCreating || this.editingMessageId) {
-        return;
-      }
-      const cat = this.messages.find(c => c.id === id);
-      this.setMessage(cat);
-      this.$router.push({ name: 'message', params: { id } });
     },
   },
 };
