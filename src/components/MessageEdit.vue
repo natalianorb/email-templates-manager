@@ -180,7 +180,7 @@ export default {
     &__cancel {
       width: 20px;
       height: 20px;
-      background: url('../assets/images/close.svg') center/14px no-repeat;
+      background: url('../assets/images/close.svg') center/14px no-repeat #fff;
     }
     .error {
       opacity: 0;

@@ -68,9 +68,11 @@ export default {
 <style lang="less" scoped>
   .filters {
     padding: 20px;
+    background-color: rgba(7, 16, 28, 0.1);
+    border-radius: 2px;
     &__body {
       display: flex;
-      padding: 10px 0;
+      margin-top: 15px;
       justify-content: space-between;
     }
   }

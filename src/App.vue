@@ -59,7 +59,7 @@ export default {
    margin: 0;
   }
   a {
-   color: rgba(7, 16, 28, 0.6);
+   color: rgba(7, 16, 28, 0.9);
    font-size: 14px;
    outline: none;
   }
@@ -88,4 +88,10 @@ export default {
      }
    }
  }
+  .disabled {
+    a {
+      color: rgba(7, 16, 28, 0.6);
+      cursor: default !important;
+    }
+  }
 </style>
