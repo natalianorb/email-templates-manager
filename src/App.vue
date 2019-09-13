@@ -42,6 +42,9 @@ export default {
 * {
  box-sizing: border-box;
 }
+body {
+  margin: 0;
+}
 input, textarea {
  border: 1px solid rgba(7, 16, 28, 0.3);
  outline: none;
@@ -78,5 +81,8 @@ a {
  color: rgba(7, 16, 28, 0.6);
  font-size: 14px;
  outline: none;
+}
+h1 {
+  margin: 0 0 30px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="categories">
+    <h1>Категории</h1>
     <router-link :to="{ name: 'messages' }">К сообщениям</router-link>
     <button type="button" @click="createCategory">Создать категорию</button>
     <Filters

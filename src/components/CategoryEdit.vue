@@ -57,11 +57,11 @@
 </template>
 
 <script>
-import { debounce } from 'lodash';
 import SearchSelect from '@/components/SearchSelect.vue';
-import Category from '@/classes/Category';
+import searchCategory from '@/mixins/searchCategory';
 
 export default {
+  mixins: [searchCategory],
   components: { SearchSelect },
   props: {
     category: {
@@ -83,12 +83,8 @@ export default {
   },
   data() {
     return {
-      error: '',
       id: '',
       title: '',
-      parent: null,
-      parents: [],
-      parentTitle: '',
       children: [],
       messages: [],
     };
@@ -103,11 +99,6 @@ export default {
         }
       },
     },
-  },
-  created() {
-    this.init();
-
-    this.debouncedsearchParent = debounce(this.searchParent, 300);
   },
   methods: {
     init() {
@@ -127,14 +118,6 @@ export default {
         this.parentTitle = '';
       }
     },
-    onBlur(e) {
-      if (this.error) {
-        return;
-      }
-      if (e.target && e.target.value && !this.parent) {
-        this.error = 'Проверьте корректность ввода';
-      }
-    },
     onCancel() {
       this.$emit('cancel');
       this.error = '';
@@ -146,22 +129,10 @@ export default {
     onEdit() {
       this.$emit('edit', this.category.id);
     },
-    onInputParent(val) {
-      this.parentTitle = val.trim();
-      this.parent = null;
-      if (!this.error) {
-        this.debouncedsearchParent(this.parentTitle);
-      }
-    },
     onSelect() {
       if (!this.isEditing) {
         this.$emit('select', this.category.id);
       }
-    },
-    onSelectParent(category) {
-      this.error = '';
-      this.parentTitle = category.title;
-      this.parent = category;
     },
     onSave() {
       const {
@@ -173,14 +144,6 @@ export default {
         children,
         messages,
         parent,
-      });
-    },
-    searchParent(title) {
-      if (!title) {
-        return;
-      }
-      Category.getByTitle({ title }).then((res) => {
-        this.parents = res;
       });
     },
   },
