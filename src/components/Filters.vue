@@ -13,7 +13,7 @@
         type="number"
         min="0"
         step="1"
-        @input="$emit('update:messagesCount', +$event.target.value)" >
+        @input="onInputCount" >
     </div>
   </form>
 </template>
@@ -56,6 +56,10 @@ export default {
       const trimmed = e.target.value.trim().slice(0, this.maxParentLength);
       e.target.value = trimmed;
       this.$emit('update:parentTitle', trimmed);
+    },
+    onInputCount(e) {
+      const { value } = e.target;
+      this.$emit('update:messagesCount', value.length ? +value : null);
     },
   },
 };
