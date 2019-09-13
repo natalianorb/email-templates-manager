@@ -1,5 +1,4 @@
 import { debounce } from 'lodash';
-import Category from '@/classes/Category';
 
 export default {
   data() {
@@ -34,14 +33,6 @@ export default {
       this.error = '';
       this.parentTitle = category.title;
       this.parent = category;
-    },
-    searchParent(title) {
-      if (!title) {
-        return;
-      }
-      Category.getByTitle({ title }).then((res) => {
-        this.parents = res;
-      });
     },
   },
 };

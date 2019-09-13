@@ -68,6 +68,7 @@
 <script>
 import SearchSelect from '@/components/SearchSelect.vue';
 import searchCategory from '@/mixins/searchCategory';
+import Category from '@/classes/Category';
 
 export default {
   props: {
@@ -133,6 +134,14 @@ export default {
       } = this;
       this.$emit('save', {
         id, title, body, category: parent,
+      });
+    },
+    searchParent(title) {
+      if (!title) {
+        return;
+      }
+      Category.getByTitle({ title }).then((res) => {
+        this.parents = res;
       });
     },
   },

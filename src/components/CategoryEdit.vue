@@ -59,6 +59,7 @@
 <script>
 import SearchSelect from '@/components/SearchSelect.vue';
 import searchCategory from '@/mixins/searchCategory';
+import Category from '@/classes/Category';
 
 export default {
   mixins: [searchCategory],
@@ -144,6 +145,14 @@ export default {
         children,
         messages,
         parent,
+      });
+    },
+    searchParent(title) {
+      if (!title) {
+        return;
+      }
+      Category.getByTitle({ title }).then((res) => {
+        this.parents = res.filter(c => c.id !== this.category.id);
       });
     },
   },
