@@ -1,8 +1,10 @@
 <template>
   <div class="categories">
     <h1>Категории</h1>
-    <router-link :to="{ name: 'messages' }">К сообщениям</router-link>
-    <button type="button" @click="createCategory">Создать категорию</button>
+    <div class="header">
+      <router-link :to="{ name: 'messages' }">К сообщениям</router-link>
+      <button type="button" @click="createCategory">Создать категорию</button>
+    </div>
     <Filters
       :title.sync="title"
       :parent-title.sync="parentTitle"
@@ -271,41 +273,41 @@ export default {
 
 <style lang="less" scoped>
   @import "../assets/styles/colors";
-.categories {
-  width: 90%;
-  min-width: 900px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 0;
-  &__table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-  }
-  &__head {
-    color: @text-color;
-    td {
-      padding: 10px 4px;
+  .categories {
+    width: 90%;
+    min-width: 900px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 0;
+    &__table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
     }
-  }
-  &__sort {
-    border: none;
-    &.sorted:after {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin-left: 5px;
-      content: '';
-      background: url('../assets/images/angle.svg') right center/10px no-repeat;
-    }
-    &.ascending {
-      &:after {
-        transform: rotate(180deg);
+    &__head {
+      color: @text-color;
+      td {
+        padding: 10px 4px;
       }
     }
+    &__sort {
+      border: none;
+      &.sorted:after {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-left: 5px;
+        content: '';
+        background: url('../assets/images/angle.svg') right center/10px no-repeat;
+      }
+      &.ascending {
+        &:after {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    .filters {
+      margin-top: 30px;
+    }
   }
-  .filters {
-    margin-top: 30px;
-  }
-}
 </style>

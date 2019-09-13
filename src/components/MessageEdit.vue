@@ -88,8 +88,8 @@ export default {
       default: false,
     },
   },
-  components: { SearchSelect },
   mixins: [searchCategory],
+  components: { SearchSelect },
   data() {
     return {
       id: '',

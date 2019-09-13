@@ -151,51 +151,51 @@ export default {
 </script>
 
 <style scoped lang="less">
-.category-edit {
-  height: 55px;
-  &:hover {
-    background-color:  rgba(7, 16, 28, 0.1);
-  }
-  &.active {
-    background-color:  rgba(7, 16, 28, 0.1);
-  }
-  td {
-    padding: 10px 4px 4px;
-    vertical-align: baseline;
-  }
-  &__input {
-    background-color:  #fff;
-  }
-  &__parent {
-    width: 230px;
-    text-align: left;
-  }
-  &__children {
-    width: 230px;
-  }
-  &__buttons {
-    width: 200px;
-    button {
-      margin: 0 4px;
+  .category-edit {
+    height: 55px;
+    &:hover {
+      background-color:  rgba(7, 16, 28, 0.1);
+    }
+    &.active {
+      background-color:  rgba(7, 16, 28, 0.1);
+    }
+    td {
+      padding: 10px 4px 4px;
+      vertical-align: baseline;
+    }
+    &__input {
+      background-color:  #fff;
+    }
+    &__parent {
+      width: 230px;
+      text-align: left;
+    }
+    &__children {
+      width: 230px;
+    }
+    &__buttons {
+      width: 200px;
+      button {
+        margin: 0 4px;
+      }
+    }
+    &__cancel {
+      width: 20px;
+      height: 20px;
+      background: url('../assets/images/close.svg') center/14px no-repeat;
+    }
+    .error {
+      opacity: 0;
+      height: 14px;
+      color: transparent;
+      font-size: 12px;
+      &.visible {
+        opacity: 1;
+        color: red;
+      }
+    }
+    .search-select {
+      text-align: left;
     }
   }
-  &__cancel {
-    width: 20px;
-    height: 20px;
-    background: url('../assets/images/close.svg') center/14px no-repeat;
-  }
-  .error {
-    opacity: 0;
-    height: 14px;
-    color: transparent;
-    font-size: 12px;
-    &.visible {
-      opacity: 1;
-      color: red;
-    }
-  }
-  .search-select {
-    text-align: left;
-  }
-}
 </style>

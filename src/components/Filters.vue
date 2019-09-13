@@ -62,12 +62,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.filters {
-  padding: 20px;
-  &__body {
-    display: flex;
-    padding: 10px 0;
-    justify-content: space-between;
+  .filters {
+    padding: 20px;
+    &__body {
+      display: flex;
+      padding: 10px 0;
+      justify-content: space-between;
+    }
   }
-}
 </style>
