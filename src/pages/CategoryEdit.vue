@@ -39,29 +39,11 @@
         <h2>
           Количество подкатегорий: {{ children.length }}
         </h2>
-        <table v-if="children.length">
-          <tr class="category-edit__table-head">
-            <td class="category-edit__title-column">
-              Название
-            </td>
-            <td>
-              Родительская категория
-            </td>
-            <td class="category-edit__children-column">
-              Подкатегории
-            </td>
-            <td>
-              Сообщения
-            </td>
-            <td></td>
-          </tr>
-          <tr is="CategoryView"
-              v-for="child in children"
-              :key="child.id"
-              :category="child"
-              @edit="goEditCategory"
+        <CategoriesTable
+          v-if="children.length"
+          :categories="children"
+          @edit="goEditCategory"
           />
-        </table>
       </template>
     </div>
     <div class="category-edit__messages">
@@ -120,11 +102,11 @@ import SimpleModal from 'simple-modal-vue';
 import SearchSelect from '@/components/SearchSelect.vue';
 import searchCategory from '@/mixins/searchCategory';
 import Category from '@/classes/Category';
-import CategoryView from '@/components/CategoryView.vue';
+import CategoriesTable from '@/components/CategoriesTable.vue';
 
 export default {
   mixins: [searchCategory],
-  components: { CategoryView, SearchSelect, SimpleModal },
+  components: { CategoriesTable, SearchSelect, SimpleModal },
   props: {
     id: {
       type: String,
