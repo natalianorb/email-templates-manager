@@ -12,10 +12,9 @@
         <input  type="text" :value="parentTitle" placeholder="Родительская категория"
                 @input="onInputParent" class="filters__input">
       </label>
-      <label class="filters__label _counter">
+      <label v-if="hasCounter" class="filters__label _counter">
         <span>Количество сообщений</span>
         <input
-          v-if="hasCounter"
           placeholder=""
           :value="messagesCount"
           type="number"
