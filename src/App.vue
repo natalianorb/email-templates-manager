@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang="less">
- @import "assets/styles/colors";
+ @import "assets/styles/variables";
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -38,6 +38,7 @@ export default {
    &[disabled] {
      border-color: transparent;
      background-color: transparent;
+     text-overflow: ellipsis;
    }
   }
   button {

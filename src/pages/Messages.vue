@@ -274,7 +274,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import "../assets/styles/colors";
+  @import "../assets/styles/variables";
   .messages {
     width: 90%;
     min-width: 900px;

@@ -1,6 +1,6 @@
 <template>
   <tr :class="{ 'category-edit': true, active: isEditing }"  @click="onSelect">
-    <td>
+    <td class="category-edit__title">
       <input class="category-edit__input" v-model="title" :disabled="!isEditing" type="text">
     </td>
     <td class="category-edit__parent">
@@ -159,28 +159,41 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+  @import "../assets/styles/variables";
+  @row-height: 55px;
+
   .category-edit {
     height: 55px;
-    &:hover {
-      background-color:  rgba(7, 16, 28, 0.1);
+    @media screen and (min-width: @laptop) {
+      &:hover {
+        background-color:  rgba(7, 16, 28, 0.1);
+      }
     }
+
     &.active {
-      background-color:  rgba(7, 16, 28, 0.1);
+      background-color:  #e7eaed;
     }
     td {
-      padding: 10px 4px 4px;
+      padding: 10px 0 4px;
       vertical-align: baseline;
+    }
+    &__title {
+      position: absolute;
+      left: 0;
+      top: auto;
+      height: @row-height;
+      @media screen and (min-width: @laptop) {
+        position: static;
+      }
     }
     &__input {
       background-color:  #fff;
     }
     &__parent {
-      width: 230px;
       text-align: left;
     }
     &__children {
-      width: 230px;
     }
     &__buttons {
       width: 200px;

@@ -11,58 +11,63 @@
       :has-counter="true"
       :messages-count.sync="messagesCount"
     />
-    <table class="categories__table">
-      <tr class="categories__head">
-        <td>
-          <button
-            :class="['categories__sort', { sorted: sortBy === 'title', ascending }]"
-            type="button" @click="sortBy = 'title'; ascending = !ascending">
-            Название
-          </button>
-        </td>
-        <td>
-          <button
-            :class="['categories__sort', { sorted: sortBy === 'parentTitle', ascending }]"
-            type="button" @click="sortBy = 'parentTitle'; ascending = !ascending">
-            Родительская категория
-          </button>
-        </td>
-        <td>
-          <button
-            :class="['categories__sort', { sorted: sortBy === 'children', ascending }]"
-            type="button" @click="sortBy = 'children'; ascending = !ascending">
-            Подкатегории
-          </button>
-        </td>
-        <td>
-          <button
-            :class="['categories__sort', { sorted: sortBy === 'messages', ascending }]"
-            type="button" @click="sortBy = 'messages'; ascending = !ascending">
-            Сообщения
-          </button>
-        </td>
-        <td></td>
-      </tr>
-      <tr v-if="isCreating"
-          is="CategoryEdit"
-          :is-editing="isCreating"
-          :category="createdCategory"
-          @cancel="isCreating = false"
-          @save="debouncedSave(createdCategory, $event)"
-      />
-      <tr is="CategoryEdit"
-          v-for="category in filteredCategories"
-          :key="category.id"
-          :is-editing="category.id === editingCategoryId"
-          :is-change-disabled="!!editingCategoryId && category.id !== editingCategoryId"
-          :category="category"
-          @cancel="editingCategoryId = 0"
-          @delete="deletingCategoryId = $event; isModalVisible = true"
-          @edit="editingCategoryId = $event"
-          @save="debouncedSave(category, $event)"
-          @select="showCategory"
-      />
-    </table>
+    <div class="categories__table-wrapper">
+      <div class="categories__overflow">
+        <table class="categories__table">
+          <tr class="categories__head">
+            <td class="categories__title">
+              <button
+                :class="['categories__sort', { sorted: sortBy === 'title', ascending }]"
+                type="button" @click="sortBy = 'title'; ascending = !ascending">
+                Название
+              </button>
+            </td>
+            <td>
+              <button
+                :class="['categories__sort', { sorted: sortBy === 'parentTitle', ascending }]"
+                type="button" @click="sortBy = 'parentTitle'; ascending = !ascending">
+                Родительская категория
+              </button>
+            </td>
+            <td class="categories__children-column">
+              <button
+                :class="['categories__sort', { sorted: sortBy === 'children', ascending }]"
+                type="button" @click="sortBy = 'children'; ascending = !ascending">
+                Подкатегории
+              </button>
+            </td>
+            <td>
+              <button
+                :class="['categories__sort', { sorted: sortBy === 'messages', ascending }]"
+                type="button" @click="sortBy = 'messages'; ascending = !ascending">
+                Сообщения
+              </button>
+            </td>
+            <td></td>
+          </tr>
+          <tr v-if="isCreating"
+              is="CategoryEdit"
+              :is-editing="isCreating"
+              :category="createdCategory"
+              @cancel="isCreating = false"
+              @save="debouncedSave(createdCategory, $event)"
+          />
+          <tr is="CategoryEdit"
+              v-for="category in filteredCategories"
+              :key="category.id"
+              :is-editing="category.id === editingCategoryId"
+              :is-change-disabled="!!editingCategoryId && category.id !== editingCategoryId"
+              :category="category"
+              @cancel="editingCategoryId = 0"
+              @delete="deletingCategoryId = $event; isModalVisible = true"
+              @edit="editingCategoryId = $event"
+              @save="debouncedSave(category, $event)"
+              @select="showCategory"
+          />
+        </table>
+      </div>
+    </div>
+
     <paginate
       v-model="page"
       :page-count="totalPages"
@@ -272,13 +277,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import "../assets/styles/colors";
+  @import "../assets/styles/variables";
   .categories {
     width: 90%;
-    min-width: 900px;
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 0;
+    &__table-wrapper {
+      position: relative;
+      padding-left: @table-first-col;
+      @media screen and (min-width: @laptop) {
+        padding-left: 0;
+      }
+    }
+    &__overflow {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
     &__table {
       width: 100%;
       margin-top: 20px;
@@ -287,8 +303,21 @@ export default {
     &__head {
       color: @text-color;
       td {
-        padding: 10px 4px;
+        padding: 10px 0;
       }
+    }
+    &__title {
+      position: absolute;
+      left: 0;
+      top: auto;
+      min-width: @table-first-col;
+      width: @table-first-col;
+      @media screen and (min-width: @laptop) {
+        position: static;
+      }
+    }
+    &__children-column {
+      max-width: 100px;
     }
     &__sort {
       border: none;
