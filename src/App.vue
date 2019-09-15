@@ -16,7 +16,6 @@ export default {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: @text-color;
     font-size: 14px;
   }
@@ -67,6 +66,9 @@ export default {
   h1 {
     margin: 0 0 30px;
   }
+  table {
+    border-collapse: collapse;
+  }
   .header {
     display: flex;
     justify-content: space-between;
@@ -83,6 +85,7 @@ export default {
    &__page {
      width: 20px;
      margin: 0 5px;
+     text-align: center;
      &.active {
        border-radius: 5px;
        border: 1px solid rgba(7, 16, 28, 0.3);
