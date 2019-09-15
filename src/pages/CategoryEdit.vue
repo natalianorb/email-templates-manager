@@ -72,7 +72,7 @@
         class="category-edit__save"
         :disabled="!!parentError"
         type="button"
-        @click.stop="saveCategory"
+        @click.stop="debouncedSave"
       >
         Сохранить
       </button>
@@ -145,6 +145,12 @@ export default {
     ...mapState({
       category: state => state.category,
     }),
+    showNextConfirm() {
+      return this.category
+        && this.category.children
+        && this.category.messages
+        && (this.category.children.size || this.category.messages.size);
+    },
   },
   watch: {
     id: {
@@ -266,7 +272,17 @@ export default {
 
       const newCategory = new Category(clientData);
       newCategory.create(savingData)
-        .then(() => { this.isEditing = false; });
+        .then((res) => {
+          this.isEditing = false;
+          const primaryKey = res['Primary key'];
+
+          this.$router.replace({
+            name: 'categoryEdit',
+            params: {
+              id: primaryKey.id,
+            },
+          });
+        });
     },
     searchParent(title) {
       if (!title) {

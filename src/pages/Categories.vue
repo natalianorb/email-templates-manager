@@ -87,8 +87,6 @@ export default {
   data() {
     return {
       categories: [],
-      deletingCategoryId: 0,
-      editingCategoryId: 0,
       page: 0,
       totalPages: 0,
       title: '',
@@ -99,13 +97,6 @@ export default {
     };
   },
   computed: {
-    deletingCategory() {
-      return this.categories.find(c => c.id === this.deletingCategoryId);
-    },
-    showNextConfirm() {
-      return this.deletingCategory
-        && (this.deletingCategory.children.size || this.deletingCategory.messages.size);
-    },
     filteredCategories() {
       const { title, parentTitle, messagesCount } = this;
       const normalizedTitle = title.toLowerCase();
@@ -233,6 +224,7 @@ export default {
     }
     &__children-column {
       max-width: 100px;
+      text-align: center;
     }
     &__sort {
       border: none;

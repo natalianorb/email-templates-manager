@@ -58,7 +58,6 @@ export default {
         background-color:  rgba(7, 16, 28, 0.1);
       }
     }
-
     td {
       padding: 10px 0 4px;
       vertical-align: baseline;
@@ -83,6 +82,10 @@ export default {
       text-align: left;
     }
     &__children {
+      text-align: center;
+    }
+    &__messages {
+      text-align: center;
     }
     &__buttons {
       width: 200px;
