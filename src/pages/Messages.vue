@@ -1,6 +1,6 @@
 <template>
   <div class="messages">
-    <h1 v-if="id">Категория {{ category.title }}</h1>
+    <h1 v-if="id">Сообщения категории {{ category.title }}</h1>
     <h1 v-else>Сообщения</h1>
     <div class="header">
       <router-link :to="{ name: 'categories' }">К категориям</router-link>
@@ -310,7 +310,7 @@ export default {
     }
     .filters {
       margin-top: 30px;
-      width: 440px;
+      width: 470px;
     }
   }
 </style>

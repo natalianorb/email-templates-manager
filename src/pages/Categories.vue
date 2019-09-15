@@ -45,23 +45,11 @@
             </td>
             <td></td>
           </tr>
-          <tr v-if="isCreating"
-              is="CategoryEdit"
-              :is-editing="isCreating"
-              :category="createdCategory"
-              @cancel="isCreating = false"
-              @save="debouncedSave(createdCategory, $event)"
-          />
-          <tr is="CategoryEdit"
+          <tr is="CategoryView"
               v-for="category in filteredCategories"
               :key="category.id"
-              :is-editing="category.id === editingCategoryId"
-              :is-change-disabled="!!editingCategoryId && category.id !== editingCategoryId"
               :category="category"
-              @cancel="editingCategoryId = 0"
-              @delete="deletingCategoryId = $event; isModalVisible = true"
-              @edit="editingCategoryId = $event"
-              @save="debouncedSave(category, $event)"
+              @edit="goEditCategory"
               @select="showCategory"
           />
         </table>
@@ -78,33 +66,13 @@
       page-class="pagination__page"
       >
     </paginate>
-    <simple-modal
-      v-model="isModalVisible"
-      size="small"
-      title="Действительно удалить?"
-      class="modal">
-      <template v-if="!isSecondConfirmVisible" slot="body">
-        <div>Пожалуйста, подтвердите удаление</div>
-        <div class="modal__buttons">
-          <button type="button" @click="doubleCheck">Удалить</button>
-        </div>
-      </template>
-      <template v-else slot="body">
-        <div>Данная категория содержит сообщения или другие категории</div>
-        <div class="modal__buttons">
-          <button type="button" @click="debouncedDelete">Все равно удалить</button>
-        </div>
-      </template>
-    </simple-modal>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import SimpleModal from 'simple-modal-vue';
-import { debounce } from 'lodash';
 import Paginate from 'vuejs-paginate';
-import CategoryEdit from '@/components/CategoryEdit.vue';
+import CategoryView from '@/components/CategoryView.vue';
 import Category from '@/classes/Category';
 import Filters from '@/components/Filters.vue';
 import { compareBy } from '@/utils';
@@ -112,20 +80,15 @@ import { compareBy } from '@/utils';
 export default {
   name: 'Categories',
   components: {
-    CategoryEdit,
+    CategoryView,
     Filters,
     Paginate,
-    SimpleModal,
   },
   data() {
     return {
-      createdCategory: {},
       categories: [],
       deletingCategoryId: 0,
-      isCreating: false,
-      isModalVisible: false,
       editingCategoryId: 0,
-      isSecondConfirmVisible: false,
       page: 0,
       totalPages: 0,
       title: '',
@@ -183,37 +146,16 @@ export default {
   },
   created() {
     this.getCategories();
-    this.debouncedSave = debounce(this.saveCategory, 300);
-    this.debouncedDelete = debounce(this.deleteCategory, 300);
   },
   methods: {
     ...mapActions([
       'setCategory',
     ]),
     createCategory() {
-      this.isCreating = true;
-      this.createdCategory = new Category();
+      this.$router.push({ name: 'categoryEdit', params: { id: '0' } });
     },
-    doubleCheck() {
-      if (this.showNextConfirm && !this.isSecondConfirmVisible) {
-        this.isSecondConfirmVisible = true;
-        return;
-      }
-      this.deleteCategory();
-    },
-    deleteCategory() {
-      const catIndex = this.categories.findIndex(c => c.id === this.deletingCategoryId);
-
-      if (catIndex > -1) {
-        this.deletingCategory.delete()
-          .then(() => {
-            this.editingCategoryId = 0;
-            this.isModalVisible = false;
-            this.deletingCategoryId = 0;
-            this.categories.splice(catIndex, 1);
-            this.isSecondConfirmVisible = false;
-          });
-      }
+    goEditCategory(id) {
+      this.$router.push({ name: 'categoryEdit', params: { id: `${id}` } });
     },
     getCategories(params = {}) {
       let hasParents;
@@ -241,33 +183,7 @@ export default {
     getPage(page) {
       this.getCategories({ page });
     },
-    saveCategory(category, data) {
-      const savingData = Object.assign({}, data);
-
-      savingData.parent = data.parent ? { id: data.parent.id } : null;
-      if (category.id) {
-        category.update(savingData)
-          .then(() => {
-            this.editingCategoryId = 0;
-            const index = this.categories.findIndex(cat => cat.id === category.id);
-            this.$set(this.categories, index, new Category(data));
-          });
-        return;
-      }
-
-      this.createdCategory = new Category(data);
-      category.create(savingData)
-        .then((res) => {
-          const primaryKey = res['Primary key'];
-          this.createdCategory.id = primaryKey && primaryKey.id;
-          this.isCreating = false;
-          this.categories.unshift(this.createdCategory);
-        });
-    },
     showCategory(id) {
-      if (this.isCreating || this.editingCategoryId) {
-        return;
-      }
       const cat = this.categories.find(c => c.id === id);
       this.setCategory(cat);
       this.$router.push({ name: 'category', params: { id: `${id}` } });
@@ -298,7 +214,6 @@ export default {
     &__table {
       width: 100%;
       margin-top: 20px;
-      border-collapse: collapse;
     }
     &__head {
       color: @text-color;

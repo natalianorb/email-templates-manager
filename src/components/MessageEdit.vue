@@ -18,7 +18,7 @@
         @input="onInputParent"
         @blur="onBlur"
         @select="onSelectParent"
-        @error="error = $event"
+        @error="parentError = $event"
       >
         <template v-slot:default="slotProps">
           <div>
@@ -27,7 +27,7 @@
         </template>
       </SearchSelect>
       <input v-else-if="message.category" :value="message.category.title" disabled/>
-      <div :class="[ 'error', { visible: !!error } ]" >{{ error }}</div>
+      <div :class="[ 'error', { visible: !!parentError } ]" >{{ parentError }}</div>
     </td>
     <td class="message-edit__text">
       <textarea
@@ -38,7 +38,12 @@
     </td>
     <td class="message-edit__buttons">
       <template v-if="isEditing">
-        <button class="message-edit__save" :disabled="!!error" type="button" @click.stop="onSave">
+        <button
+          class="message-edit__save"
+          :disabled="!!parentError"
+          type="button"
+          @click.stop="onSave"
+        >
           Сохранить
         </button>
         <button
@@ -119,7 +124,7 @@ export default {
     },
     onCancel() {
       this.$emit('cancel');
-      this.error = '';
+      this.parentError = '';
       this.init();
     },
     onDelete() {

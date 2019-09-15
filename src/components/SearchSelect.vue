@@ -1,13 +1,16 @@
 <template>
   <div class="search-select">
-    <input
-      :value="searchingValue"
-      :placeholder="placeholder"
-      class="search-select__input"
-      @focus="showDropdown"
-      @input="onInput"
-      @blur="onBlur"
-    />
+    <label>
+      <span>{{ label }}</span>
+      <input
+        :value="searchingValue"
+        :placeholder="placeholder"
+        class="search-select__input"
+        @focus="showDropdown"
+        @input="onInput"
+        @blur="onBlur"
+      />
+    </label>
     <div
       v-show="visible && filteredOptions && filteredOptions.length"
       class="search-select__dropdown"
@@ -50,6 +53,10 @@ export default {
     event: 'input',
   },
   props: {
+    label: {
+      type: String,
+      default: '',
+    },
     searchingValue: {
       type: String,
       default: '',
