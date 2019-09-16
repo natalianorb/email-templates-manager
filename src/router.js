@@ -11,7 +11,7 @@ export default new VueRouter({
     { path: '/', name: 'home', component: Categories },
     { path: '/categories', name: 'categories', component: Categories },
     {
-      path: '/categories/:id', name: 'category', component: Messages, props: true,
+      path: '/categoryMessages/:id', name: 'categoryMessages', component: Messages, props: true,
     },
     {
       path: '/categoryEdit/:id', name: 'categoryEdit', component: CategoryEdit, props: true,

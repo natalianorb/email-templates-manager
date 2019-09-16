@@ -21,6 +21,7 @@
     />
 
     <paginate
+      v-show="totalPages"
       v-model="page"
       :page-count="totalPages"
       :click-handler="getPage"
@@ -145,7 +146,7 @@ export default {
     showCategory(id) {
       const cat = this.categories.find(c => c.id === id);
       this.setCategory(cat);
-      this.$router.push({ name: 'category', params: { id: `${id}` } });
+      this.$router.push({ name: 'categoryMessages', params: { id: `${id}` } });
     },
   },
 };

@@ -1,6 +1,13 @@
 <template>
   <div :key="id" class="category-edit">
-    <h1 class="header">Категориия {{ category.title }}</h1>
+    <h2 v-if="isEditing">Редактирование категории</h2>
+    <h2 v-else >Категория</h2>
+    <h1 class="category-edit__page-title">{{ category.title }}</h1>
+    <div class="header" v-if="id !== '0'">
+      <router-link :to="{ name: 'categoryMessages', params: { id } }">
+        К сообщениям категории
+      </router-link>
+    </div>
     <div class="category-edit__top">
       <div class="category-edit__title">
         <label>
@@ -289,6 +296,11 @@ export default {
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 0;
+    &__page-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     &__top {
       @media screen and (min-width: @laptop) {
         display: flex;

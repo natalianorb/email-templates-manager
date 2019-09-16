@@ -1,6 +1,6 @@
 <template>
   <div class="messages">
-    <h1 v-if="id">Сообщения категории {{ category.title }}</h1>
+    <h1 v-if="id" class="messages__title">Сообщения категории {{ category.title }}</h1>
     <h1 v-else>Сообщения</h1>
     <div class="header">
       <router-link :to="{ name: 'categories' }">К категориям</router-link>
@@ -57,6 +57,7 @@
       />
     </table>
     <paginate
+      v-show="totalPages"
       v-model="page"
       :page-count="totalPages"
       :click-handler="getPage"
@@ -277,10 +278,14 @@ export default {
   @import "../assets/styles/variables";
   .messages {
     width: 90%;
-    min-width: 900px;
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 0;
+    &__title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     &__table {
       width: 100%;
       margin-top: 20px;
@@ -310,7 +315,7 @@ export default {
     }
     .filters {
       margin-top: 30px;
-      width: 470px;
+      max-width: 470px;
     }
   }
 </style>
