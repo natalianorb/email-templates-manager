@@ -12,14 +12,13 @@
       <div class="message-edit__textarea">{{ message.body }}</div>
     </td>
     <td class="message-edit__buttons">
-      <button
+      <router-link
         v-show="!isChangeDisabled"
         class="message-edit__save"
-        type="button"
-        @click.stop="onEdit"
+        :to="{ name: 'messageEdit', params: { id: `${message.id}` } }"
       >
         Изменить
-      </button>
+      </router-link>
     </td>
   </tr>
 </template>

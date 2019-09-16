@@ -203,10 +203,6 @@ export default {
 <style lang="less" scoped>
   @import "../assets/styles/variables";
   .messages {
-    width: 90%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 0;
     &__title {
       overflow: hidden;
       text-overflow: ellipsis;

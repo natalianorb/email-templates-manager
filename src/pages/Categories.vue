@@ -1,9 +1,11 @@
 <template>
-  <div class="categories">
+  <div class="categories container">
     <h1>Категории</h1>
     <div class="header">
       <router-link :to="{ name: 'messages' }">К сообщениям</router-link>
-      <button type="button" @click="createCategory">Создать категорию</button>
+      <router-link :to="{ name: 'categoryEdit', params: { id: '0' } }">
+        Создать категорию
+      </router-link>
     </div>
     <Filters
       :title.sync="title"
@@ -107,9 +109,6 @@ export default {
     ...mapActions([
       'setCategory',
     ]),
-    createCategory() {
-      this.$router.push({ name: 'categoryEdit', params: { id: '0' } });
-    },
     goEditCategory(id) {
       this.$router.push({ name: 'categoryEdit', params: { id: `${id}` } });
     },
@@ -155,11 +154,6 @@ export default {
 <style lang="less" scoped>
   @import "../assets/styles/variables";
   .categories {
-    width: 90%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 0;
-
     .filters {
       margin-top: 30px;
     }

@@ -1,13 +1,8 @@
 <template>
-  <div :key="id" class="category-edit">
-    <h2 v-if="isEditing">Редактирование категории</h2>
+  <div :key="id" class="category-edit container">
+    <h2 v-if="isEditing">{{ id === '0'? 'Создание' : 'Редактирование' }} категории</h2>
     <h2 v-else >Категория</h2>
     <h1 class="category-edit__page-title">{{ category.title }}</h1>
-    <div class="header" v-if="id !== '0'">
-      <router-link :to="{ name: 'categoryMessages', params: { id } }">
-        К сообщениям категории
-      </router-link>
-    </div>
     <div class="category-edit__top">
       <div class="category-edit__title">
         <label>
@@ -58,6 +53,9 @@
     </div>
     <div class="category-edit__messages">
       <h2 v-if="category.messages">Количество сообщений: {{ category.messages.size }}</h2>
+      <router-link v-if="id !== '0'" :to="{ name: 'categoryMessages', params: { id } }">
+        К сообщениям категории
+      </router-link>
     </div>
     <div v-if="isEditing" class="category-edit__buttons">
       <button
@@ -311,10 +309,6 @@ export default {
   @import "../assets/styles/variables";
 
   .category-edit {
-    width: 90%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 0;
     &__page-title {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -329,8 +323,9 @@ export default {
     }
     &__title,
     &__parent {
-      width: 38%;
+      width: 48%;
       max-width: 420px;
+      margin-top: 20px;
     }
     input {
       margin-top: 5px;
@@ -340,13 +335,11 @@ export default {
       background-color:  #fff;
     }
     &__parent {
-      margin-top: 20px;
       text-align: left;
-    }
-    &__children {
     }
     &__buttons {
       width: 200px;
+      margin-top: 30px;
       button {
         margin: 0 4px;
       }

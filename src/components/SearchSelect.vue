@@ -161,6 +161,7 @@ export default {
 
     &__input {
       width: 100%;
+      margin-top: 5px;
     }
     &__dropdown {
       position: absolute;

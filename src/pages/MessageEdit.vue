@@ -3,6 +3,14 @@
     <h2 v-if="isEditing">{{ id === '0'? 'Создание' : 'Редактирование' }} сообщения</h2>
     <h2 v-else >Сообщение</h2>
     <h1 v-if="message" class="message-edit__page-title">{{ message.title }}</h1>
+    <div class="header">
+      <router-link
+        v-if="message && message.category && (id !== '0')"
+        :to="{ name: 'categoryMessages', params: { id: `${message.category.id}` } }"
+      >
+        К сообщениям категории
+      </router-link>
+    </div>
     <div class="message-edit__title">
       <label>
         <div>Название</div>
@@ -240,6 +248,9 @@ export default {
     input,
     textarea {
       margin-top: 5px;
+    }
+    &__title {
+      margin-top: 20px;
     }
     &__input {
       width: 100%;

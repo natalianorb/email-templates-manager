@@ -56,13 +56,12 @@
             </div>
           </td>
           <td class="category-view__buttons">
-            <button
+            <router-link
               class="category-view__save"
-              type="button"
-              @click.stop="onEdit(category.id)"
+              :to="{ name: 'categoryEdit', params: { id: `${category.id}` }}"
             >
               Изменить
-            </button>
+            </router-link>
           </td>
         </tr>
       </table>
@@ -118,7 +117,6 @@ export default {
     }
     &__table {
       width: 100%;
-      margin-top: 20px;
     }
     &__head {
       color: @text-color;

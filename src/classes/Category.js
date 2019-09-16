@@ -63,7 +63,7 @@ class Category extends Base {
   }
 
   static getById(options = {}) {
-    const { id, page, perPage } = options;
+    const { id } = options;
 
     if (!id) {
       return Promise.reject(new Error('getById requires id'));
@@ -75,8 +75,6 @@ class Category extends Base {
         id: 'test',
         params: {
           conditions: ['id', '=', id],
-          page,
-          perPage,
           fields,
         },
       })

@@ -64,7 +64,10 @@ export default {
    outline: none;
   }
   h1 {
-    margin: 0 0 30px;
+    margin: 0 0 40px;
+  }
+  h2 {
+    margin: 20px 0 10px;
   }
   table {
     border-collapse: collapse;
@@ -73,6 +76,7 @@ export default {
     width: 90%;
     max-width: 1100px;
     margin: 0 auto;
+    padding: 40px 0;
   }
   .header {
     display: flex;
@@ -80,6 +84,7 @@ export default {
     padding: 10px;
   }
   .modal {
+    text-align: center;
    &__buttons {
      margin-top: 20px;
    }
