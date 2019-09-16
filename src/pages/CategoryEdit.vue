@@ -13,6 +13,9 @@
         <label>
           <div>Название</div>
           <input v-model="title" :disabled="!isEditing" class="category-edit__input" />
+          <div :class="['error', { visible: $v && $v.title && $v.title.$invalid }]">
+            Слишком длинное название
+          </div>
         </label>
       </div>
       <div class="category-edit__parent">
@@ -59,7 +62,7 @@
     <div v-if="isEditing" class="category-edit__buttons">
       <button
         class="category-edit__save"
-        :disabled="!!parentError"
+        :disabled="saveDisabled"
         type="button"
         @click.stop="debouncedSave"
       >
@@ -106,6 +109,7 @@
 import { mapActions, mapState } from 'vuex';
 import { debounce } from 'lodash';
 import SimpleModal from 'simple-modal-vue';
+import { maxLength } from 'vuelidate/lib/validators';
 import SearchSelect from '@/components/SearchSelect.vue';
 import searchCategory from '@/mixins/searchCategory';
 import Category from '@/classes/Category';
@@ -119,6 +123,13 @@ export default {
       type: String,
       required: true,
     },
+  },
+  validations() {
+    return {
+      title: {
+        maxLength: maxLength(255),
+      },
+    };
   },
   data() {
     return {
@@ -134,6 +145,14 @@ export default {
     ...mapState({
       category: state => state.category,
     }),
+    saveDisabled() {
+      if (!this.$v) {
+        return true;
+      }
+      const { $v } = this;
+
+      return ($v && $v.title && $v.title.$invalid) || !!this.parentError;
+    },
     showNextConfirm() {
       return this.category
         && this.category.children
