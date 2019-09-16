@@ -1,20 +1,18 @@
 <template>
-  <tr class="message-edit">
-    <td class="message-edit__title">
-      <div class="message-edit__input">
-        {{ message.title }}
-      </div>
+  <tr class="message-view">
+    <td class="message-view__title">
+      {{ message.title }}
     </td>
-    <td class="message-edit__parent">
-      <div>{{ message.category.title}}</div>
+    <td class="message-view__parent">
+      {{ message.category.title}}
     </td>
-    <td class="message-edit__text">
-      <div class="message-edit__textarea">{{ message.body }}</div>
+    <td class="message-view__text">
+      <div class="message-view__textarea">{{ message.body }}</div>
     </td>
-    <td class="message-edit__buttons">
+    <td class="message-view__buttons">
       <router-link
         v-show="!isChangeDisabled"
-        class="message-edit__save"
+        class="message-view__save"
         :to="{ name: 'messageEdit', params: { id: `${message.id}` } }"
       >
         Изменить
@@ -48,7 +46,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-  .message-edit {
+  @import "../assets/styles/variables";
+
+  .message-view {
     &:hover {
       background-color:  rgba(7, 16, 28, 0.1);
     }
@@ -59,16 +59,45 @@ export default {
       padding: 4px;
       vertical-align: top;
     }
-    &__input {
-      background-color:  #fff;
+    &__title {
+      max-width: 130px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      @media screen and (min-width: @laptop) {
+        max-width: 300px;
+      }
     }
     &__parent {
-      width: 230px;
+      max-width: 80px;
       text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      @media screen and (min-width: @tablet) {
+        max-width: 200px;
+      }
+      @media screen and (min-width: @laptop) {
+        max-width: 300px;
+      }
+    }
+    &__text {
+      display: none;
+      @media screen and (min-width: @tablet) {
+       display: table-cell;
+      }
     }
     &__textarea {
-      width: 400px;
+      max-width: 200px;
       height: 58px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @media screen and (min-width: @laptop) {
+        max-width: 250px;
+      }
+      @media screen and (min-width: 1200px) {
+        max-width: 400px;
+      }
     }
     &__buttons {
       width: 200px;

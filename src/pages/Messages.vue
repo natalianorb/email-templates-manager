@@ -29,7 +29,7 @@
             Родительская категория
           </button>
         </td>
-        <td>
+        <td class="messages__body-column">
           <button
             :class="['messages__sort', { sorted: sortBy === 'body', ascending }]"
             type="button" @click="sortBy = 'body'; ascending = !ascending">
@@ -38,13 +38,6 @@
         </td>
         <td></td>
       </tr>
-      <!--<tr v-if="isCreating"
-          is="MessageView"
-          :is-editing="isCreating"
-          :message="createdMessage"
-          @cancel="isCreating = false"
-          @save="debouncedSave(createdMessage, $event)"
-      />-->
       <tr is="MessageView"
           v-for="message in filteredMessages"
           :key="message.id"
@@ -234,6 +227,12 @@ export default {
         &:after {
           transform: rotate(180deg);
         }
+      }
+    }
+    &__body-column {
+      display: none;
+      @media screen and (min-width: @tablet) {
+        display: table-cell;
       }
     }
     .filters {

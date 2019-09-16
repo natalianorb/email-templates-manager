@@ -73,10 +73,13 @@ export default {
     border-collapse: collapse;
   }
   .container {
-    width: 90%;
+    width: 95%;
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 0;
+    @media screen and (min-width: @laptop) {
+      max-width: 90%;
+    }
   }
   .header {
     display: flex;
