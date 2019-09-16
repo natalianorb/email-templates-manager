@@ -7,12 +7,13 @@
       <router-link :to="{ name: 'messageEdit', params: { id: '0'} }">Создать сообщение</router-link>
     </div>
     <Filters
+      v-if="messages.length"
       :title.sync="title"
       :parent-title.sync="parentTitle"
       :max-title-length="1024"
       :messages-count.sync="messagesCount"
     />
-    <table class="messages__table">
+    <table v-if="messages.length" class="messages__table">
       <tr class="messages__head">
         <td>
           <button
