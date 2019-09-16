@@ -1,10 +1,10 @@
 <template>
-  <div class="messages">
+  <div class="messages container">
     <h1 v-if="id" class="messages__title">Сообщения категории {{ category.title }}</h1>
     <h1 v-else>Сообщения</h1>
     <div class="header">
       <router-link :to="{ name: 'categories' }">К категориям</router-link>
-      <button type="button" @click="createMessage">Создать сообщение</button>
+      <router-link :to="{ name: 'messageEdit', params: { id: '0'} }">Создать сообщение</router-link>
     </div>
     <Filters
       :title.sync="title"
@@ -37,23 +37,19 @@
         </td>
         <td></td>
       </tr>
-      <tr v-if="isCreating"
-          is="MessageEdit"
+      <!--<tr v-if="isCreating"
+          is="MessageView"
           :is-editing="isCreating"
           :message="createdMessage"
           @cancel="isCreating = false"
           @save="debouncedSave(createdMessage, $event)"
-      />
-      <tr is="MessageEdit"
+      />-->
+      <tr is="MessageView"
           v-for="message in filteredMessages"
           :key="message.id"
-          :is-editing="message.id === editingMessageId"
-          :is-change-disabled="!!editingMessageId && message.id !== editingMessageId"
+          :is-change-disabled="false"
           :message="message"
-          @cancel="editingMessageId = 0"
-          @delete="deletingMessageId = $event; isModalVisible = true"
-          @edit="editingMessageId = $event"
-          @save="debouncedSave(message, $event)"
+          @edit="$router.push({ name: 'messageEdit', params: { id: `${message.id}` } })"
       />
     </table>
     <paginate
@@ -67,27 +63,13 @@
       page-class="pagination__page"
     >
     </paginate>
-    <simple-modal
-      v-model="isModalVisible"
-      size="small"
-      title="Действительно удалить?"
-      class="modal">
-      <template slot="body">
-        <div>Пожалуйста, подтвердите удаление</div>
-        <div class="modal__buttons">
-          <button type="button" @click="debouncedDelete">Удалить</button>
-        </div>
-      </template>
-    </simple-modal>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import SimpleModal from 'simple-modal-vue';
-import { debounce } from 'lodash';
 import Paginate from 'vuejs-paginate';
-import MessageEdit from '@/components/MessageEdit.vue';
+import MessageView from '@/components/MessageView.vue';
 import Message from '@/classes/Message';
 import Filters from '@/components/Filters.vue';
 import { compareBy } from '@/utils';
@@ -96,10 +78,9 @@ import Category from '@/classes/Category';
 export default {
   name: 'Messages',
   components: {
-    MessageEdit,
+    MessageView,
     Filters,
     Paginate,
-    SimpleModal,
   },
   props: {
     id: {
@@ -108,12 +89,7 @@ export default {
   },
   data() {
     return {
-      createdMessage: {},
       messages: [],
-      deletingMessageId: 0,
-      isCreating: false,
-      isModalVisible: false,
-      editingMessageId: 0,
       page: 0,
       totalPages: 0,
       title: '',
@@ -127,13 +103,6 @@ export default {
     ...mapState({
       category: state => state.category,
     }),
-    deletingMessage() {
-      return this.messages.find(c => c.id === this.deletingMessageId);
-    },
-    showNextConfirm() {
-      return this.deletingMessage
-        && (this.deletingMessage.children.size || this.deletingMessage.messages.size);
-    },
     filteredMessages() {
       const { title, parentTitle, messagesCount } = this;
       const normalizedTitle = title.toLowerCase();
@@ -179,30 +148,11 @@ export default {
     } else {
       this.getMessages();
     }
-    this.debouncedSave = debounce(this.saveMessage, 300);
-    this.debouncedDelete = debounce(this.deleteMessage, 300);
   },
   methods: {
     ...mapActions([
       'setCategory',
     ]),
-    createMessage() {
-      this.isCreating = true;
-      this.createdMessage = new Message();
-    },
-    deleteMessage() {
-      const catIndex = this.messages.findIndex(c => c.id === this.deletingMessageId);
-
-      if (catIndex > -1) {
-        this.deletingMessage.delete()
-          .then(() => {
-            this.editingMessageId = 0;
-            this.isModalVisible = false;
-            this.deletingMessageId = 0;
-            this.messages.splice(catIndex, 1);
-          });
-      }
-    },
     getCategoryMessages(p) {
       const categoryId = this.category.id;
       if (!categoryId) {
@@ -245,30 +195,6 @@ export default {
       } else {
         this.getMessages(page);
       }
-    },
-    saveMessage(message, data) {
-      const categoryId = data.category && data.category.id;
-      const savingData = Object.assign({}, data);
-
-      savingData.category = { id: categoryId };
-      if (message.id) {
-        message.update(savingData)
-          .then(() => {
-            this.editingMessageId = 0;
-            const index = this.messages.findIndex(m => m.id === message.id);
-            this.$set(this.messages, index, new Message(data));
-          });
-        return;
-      }
-
-      this.createdMessage = new Message(data);
-      message.create(savingData)
-        .then((res) => {
-          const primaryKey = res['Primary key'];
-          this.createdMessage.id = primaryKey && primaryKey.id;
-          this.isCreating = false;
-          this.messages.unshift(this.createdMessage);
-        });
     },
   },
 };
@@ -315,7 +241,6 @@ export default {
     }
     .filters {
       margin-top: 30px;
-      max-width: 470px;
     }
   }
 </style>

@@ -69,17 +69,22 @@ export default {
   table {
     border-collapse: collapse;
   }
+  .container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
   .header {
     display: flex;
     justify-content: space-between;
     padding: 10px;
   }
- .modal {
+  .modal {
    &__buttons {
      margin-top: 20px;
    }
- }
- .pagination {
+  }
+  .pagination {
    display: flex;
    justify-content: flex-end;
    padding: 20px;
@@ -92,7 +97,7 @@ export default {
        border: 1px solid rgba(7, 16, 28, 0.3);
      }
    }
- }
+  }
   .disabled {
     a {
       color: rgba(7, 16, 28, 0.6);

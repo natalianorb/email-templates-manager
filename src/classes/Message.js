@@ -38,11 +38,11 @@ class Message extends Base {
       .then(res => res.data && res.data.result);
   }
 
-  getById(options = { perPage: 10 }) {
-    const { id } = this;
+  static getById(options = { perPage: 10 }) {
+    const { id } = options;
 
     if (!id) {
-      return Promise.reject(new Error('get Message requires id'));
+      return Promise.reject(new Error('get Message by id requires id'));
     }
     return axios
       .post(baseUrl, {
@@ -51,11 +51,9 @@ class Message extends Base {
         id: 'test',
         params: {
           conditions: ['id', '=', id],
-          page: options.page,
-          perPage: options.perPage,
         },
       })
-      .then(res => res.data && res.data.result);
+      .then(res => res.data && res.data.result && res.data.result.data && res.data.result.data[0]);
   }
 
   // eslint-disable-next-line class-methods-use-this
