@@ -137,8 +137,10 @@ export default {
   watch: {
     id: {
       deep: true,
-      handler() {
-        this.initializeCategory();
+      handler(newVal, oldVal) {
+        if (oldVal !== '0') {
+          this.initializeCategory();
+        }
       },
     },
     category: {
@@ -257,11 +259,12 @@ export default {
         .then((res) => {
           this.isEditing = false;
           const primaryKey = res['Primary key'];
-
+          clientData.id = primaryKey.id;
+          this.setCategory(clientData);
           this.$router.replace({
             name: 'categoryEdit',
             params: {
-              id: primaryKey.id,
+              id: `${primaryKey.id}`,
             },
           });
         });
