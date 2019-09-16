@@ -216,7 +216,7 @@ export default {
           this.isEditing = false;
           message.category = parent;
           this.$router.replace({
-            name: 'categoryEdit',
+            name: 'messageEdit',
             params: {
               id: `${primaryKey.id}`,
             },
